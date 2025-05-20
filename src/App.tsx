@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const App: React.FC = () => {
   const [facts, setFacts] = useState<string[]>([]);
+  const [randomFact, setRandomFact] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -39,19 +40,63 @@ const App: React.FC = () => {
       return generatedFacts;
     };
 
-    setFacts(generateFacts());
+    const allFacts = generateFacts();
+    setFacts(allFacts);
+    getRandomFact(allFacts);
     setLoading(false);
   }, []);
 
+  const getRandomFact = (factList: string[] = facts) => {
+    if (factList.length > 0) {
+      const randomIndex = Math.floor(Math.random() * factList.length);
+      setRandomFact(factList[randomIndex]);
+    }
+  };
+
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1>1000 Simple Facts</h1>
+    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+      <h1>Random Fact Generator</h1>
       
       {loading ? (
         <p>Loading facts...</p>
       ) : (
         <div style={{ 
-          height: '600px', 
+          padding: '20px',
+          border: '1px solid #ccc', 
+          borderRadius: '5px',
+          marginBottom: '20px',
+          minHeight: '100px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#f9f9f9'
+        }}>
+          <p style={{ fontSize: '18px', fontWeight: 'bold' }}>{randomFact}</p>
+        </div>
+      )}
+      
+      <button 
+        onClick={() => getRandomFact()} 
+        style={{
+          padding: '10px 20px',
+          fontSize: '16px',
+          backgroundColor: '#4CAF50',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Get Random Fact
+      </button>
+      
+      <div style={{ 
+        marginTop: '30px',
+        textAlign: 'left'
+      }}>
+        <h3>All Facts (1000)</h3>
+        <div style={{ 
+          height: '300px', 
           overflowY: 'auto', 
           border: '1px solid #ccc', 
           padding: '10px',
@@ -63,7 +108,7 @@ const App: React.FC = () => {
             </p>
           ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };
